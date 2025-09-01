@@ -1,5 +1,6 @@
 package university.jala.legion.cli.validation;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,7 +12,7 @@ public interface ParameterValidator {
     /**
      * Validates the given parameter.
      * @param parameters The map of all command-line parameters.
-     * @throws IllegalArgumentException if the parameter is invalid.
+     * @return A list of error messages. The list is empty if validation is successful.
      */
-    void validate(Map<String, String> parameters);
+    List<String> validate(Map<String, String> parameters);
 }

@@ -3,6 +3,7 @@ package university.jala.legion.cli.validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,21 +23,29 @@ class TypeValidatorTest {
 
     @Test
     void testValidTypeCodes() {
-        // It should not throw an exception for valid type codes.
+        // It should not return any errors for valid type codes.
         String[] validCodes = {"c", "n"};
         for (String code : validCodes) {
             parameters.put("t", code);
-            assertDoesNotThrow(() -> validator.validate(parameters));
+            List<String> errors = validator.validate(parameters);
+            assertTrue(errors.isEmpty(), "Validation should pass for code: " + code);
         }
     }
 
     @Test
-    void testInvalidTypeCodeThrowsException() {
-        // It should throw an exception for an unsupported type code.
+    void testInvalidTypeCodeReturnsError() {
+        // It should return an error message for an unsupported type code.
         parameters.put("t", "x");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(parameters);
-        });
-        assertEquals("Invalid display type code: x", exception.getMessage());
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Value of Type is invalid. Accepted values are: c (Character), n (Numeric). You entered: 'x'.", errors.get(0));
+    }
+
+    @Test
+    void testMissingTypeParameterReturnsError() {
+        // It should return an error because the 't' parameter is mandatory.
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Parameter 't' (Type) is mandatory and was not provided.", errors.get(0));
     }
 }

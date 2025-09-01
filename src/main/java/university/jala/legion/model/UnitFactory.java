@@ -1,5 +1,6 @@
 package university.jala.legion.model;
 
+import university.jala.legion.model.enums.UnitType;
 import university.jala.legion.model.interfaces.ICharacter;
 import university.jala.legion.model.units.*;
 
@@ -12,24 +13,25 @@ public class UnitFactory {
     /**
      * Creates a new character unit of the specified type.
      *
-     * @param type The type of unit to create (e.g., "Commander", "Medic").
+     * @param type The enum type of the unit to create.
      * @return An instance of the requested {@link ICharacter}.
      * @throws IllegalArgumentException if the specified type is unknown.
      */
-    public static ICharacter createUnit(String type) {
-        switch (type.toLowerCase()) {
-            case "commander":
+    public static ICharacter createUnit(UnitType type) {
+        switch (type) {
+            case COMMANDER:
                 return new Commander();
-            case "medic":
+            case MEDIC:
                 return new Medic();
-            case "tank":
+            case TANK:
                 return new Tank();
-            case "sniper":
+            case SNIPER:
                 return new Sniper();
-            case "infantry":
+            case INFANTRY:
                 return new Infantry();
             default:
-                throw new IllegalArgumentException("Unknown unit type: " + type);
+                // This case is unlikely to be reached with an enum but is good practice.
+                throw new IllegalArgumentException("Unsupported unit type: " + type);
         }
     }
 }

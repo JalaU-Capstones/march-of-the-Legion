@@ -3,10 +3,7 @@ package university.jala.legion.cli;
 import university.jala.legion.cli.validation.ParameterValidator;
 import university.jala.legion.cli.validation.ParameterValidatorFactory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Handles and validates the command-line parameters for the March of the Legion simulator.
@@ -14,10 +11,11 @@ import java.util.Map;
  */
 public class Parameters implements CliParameters {
     private final Map<String, String> parameters;
+    private final List<String> validationErrors = new ArrayList<>();
 
     private static final String DEFAULT_BATTLEFIELD_SIZE = "6";
     private static final String DEFAULT_ORIENTATION = "n";
-    private static final String DEFAULT_TYPE = "c";
+    private static final String DEFAULT_ALGORITHM = "i"; // Default to Insertion Sort
 
     /**
      * Constructs a new Parameters instance from the given command-line arguments.
@@ -40,16 +38,39 @@ public class Parameters implements CliParameters {
                     parameters.put(parts[0].toLowerCase(), parts[1].toLowerCase());
                 });
 
+        // Apply default values if parameters are not provided
         parameters.putIfAbsent("f", DEFAULT_BATTLEFIELD_SIZE);
         parameters.putIfAbsent("o", DEFAULT_ORIENTATION);
-        parameters.putIfAbsent("t", DEFAULT_TYPE);
+        parameters.putIfAbsent("a", DEFAULT_ALGORITHM);
+        // 't' and 'u' are mandatory and do not have defaults
     }
 
     private void validateParameters() {
         List<ParameterValidator> validators = ParameterValidatorFactory.createValidators();
         for (ParameterValidator validator : validators) {
-            validator.validate(parameters);
+            validator.validate(parameters).forEach(validationErrors::add);
         }
+    }
+
+    /**
+     * Checks if all parameters are valid.
+     * @return true if no validation errors were found, false otherwise.
+     */
+    public boolean isValid() {
+        return validationErrors.isEmpty();
+    }
+
+    /**
+     * Gets the list of validation error messages.
+     * @return A list of error messages.
+     */
+    public List<String> getValidationErrors() {
+        return Collections.unmodifiableList(validationErrors);
+    }
+
+    @Override
+    public String getRawValue(String key) {
+        return parameters.getOrDefault(key, "[not provided]");
     }
 
     @Override
@@ -69,13 +90,25 @@ public class Parameters implements CliParameters {
 
     @Override
     public int getBattlefieldSize() {
-        return Integer.parseInt(parameters.get("f"));
+        try {
+            return Integer.parseInt(parameters.get("f"));
+        } catch (NumberFormatException e) {
+            return -1; // Invalid format will be caught by validator
+        }
     }
 
     @Override
     public int[] getUnitDistribution() {
-        return Arrays.stream(parameters.get("u").split(","))
-                .mapToInt(Integer::parseInt)
-                .toArray();
+        String value = parameters.get("u");
+        if (value == null) {
+            return new int[0]; // Will be caught by validator
+        }
+        try {
+            return Arrays.stream(value.split(","))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+        } catch (NumberFormatException e) {
+            return new int[0]; // Will be caught by validator
+        }
     }
 }

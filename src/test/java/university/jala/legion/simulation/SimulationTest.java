@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import university.jala.legion.cli.CliParameters;
+import university.jala.legion.exception.SimulationException;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
@@ -40,12 +41,13 @@ class SimulationTest {
     }
 
     @Test
-    void testSimulationRunCompletesSuccessfully() {
+    void testSimulationRunCompletesSuccessfully() throws SimulationException {
         // It should run the full simulation without throwing exceptions for valid parameters.
         CliParameters params = createMockParameters();
         Simulation simulation = new Simulation(params);
 
-        assertDoesNotThrow(simulation::run);
+        // Call the run method directly. The test will fail if any unexpected exception is thrown.
+        simulation.run();
 
         String output = outContent.toString();
         assertTrue(output.contains("Initial Position:"));
@@ -55,7 +57,7 @@ class SimulationTest {
 
     @Test
     void testSimulationRunFailsWithImpossiblePlacement() {
-        // It should throw an exception when the units cannot be placed on the battlefield.
+        // It should throw SimulationException when the units cannot be placed on the battlefield.
         CliParameters params = Mockito.mock(CliParameters.class);
         Mockito.when(params.getAlgorithm()).thenReturn("c");
         Mockito.when(params.getType()).thenReturn("c");
@@ -65,7 +67,8 @@ class SimulationTest {
 
         Simulation simulation = new Simulation(params);
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, simulation::run);
-        assertEquals("Not enough space on the battlefield for all units.", exception.getMessage());
+        // Assert that the correct, new exception type is thrown.
+        SimulationException exception = assertThrows(SimulationException.class, simulation::run);
+        assertEquals("Not enough space on the battlefield to place all units.", exception.getMessage());
     }
 }

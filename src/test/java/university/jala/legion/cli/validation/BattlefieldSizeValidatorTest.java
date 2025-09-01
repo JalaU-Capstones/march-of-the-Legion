@@ -3,6 +3,7 @@ package university.jala.legion.cli.validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,38 +23,36 @@ class BattlefieldSizeValidatorTest {
 
     @Test
     void testValidBattlefieldSize() {
-        // It should not throw an exception for a size within the valid range.
+        // It should not return any errors for a size within the valid range.
         parameters.put("f", "100");
-        assertDoesNotThrow(() -> validator.validate(parameters));
+        List<String> errors = validator.validate(parameters);
+        assertTrue(errors.isEmpty());
     }
 
     @Test
-    void testBattlefieldSizeTooSmallThrowsException() {
-        // It should throw an exception if the size is below the minimum.
+    void testBattlefieldSizeTooSmallReturnsError() {
+        // It should return an error message if the size is below the minimum.
         parameters.put("f", "4");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(parameters);
-        });
-        assertEquals("Battlefield size must be between 5 and 1000", exception.getMessage());
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Value of Battlefield Size is out of range. It must be between 5 and 1000. You entered: '4'.", errors.get(0));
     }
 
     @Test
-    void testBattlefieldSizeTooLargeThrowsException() {
-        // It should throw an exception if the size is above the maximum.
+    void testBattlefieldSizeTooLargeReturnsError() {
+        // It should return an error message if the size is above the maximum.
         parameters.put("f", "1001");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(parameters);
-        });
-        assertEquals("Battlefield size must be between 5 and 1000", exception.getMessage());
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Value of Battlefield Size is out of range. It must be between 5 and 1000. You entered: '1001'.", errors.get(0));
     }
 
     @Test
-    void testInvalidFormatForBattlefieldSizeThrowsException() {
-        // It should throw an exception for a non-numeric size.
+    void testInvalidFormatForBattlefieldSizeReturnsError() {
+        // It should return an error message for a non-numeric size.
         parameters.put("f", "abc");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(parameters);
-        });
-        assertEquals("Invalid battlefield size format", exception.getMessage());
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Value of Battlefield Size is not a valid integer. You entered: 'abc'.", errors.get(0));
     }
 }

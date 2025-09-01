@@ -3,6 +3,7 @@ package university.jala.legion.cli.validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,63 +19,60 @@ class UnitDistributionValidatorTest {
     void setUp() {
         validator = new UnitDistributionValidator();
         parameters = new HashMap<>();
-        parameters.put("f", "10"); // Default battlefield size for capacity checks
+        // Provide a default battlefield size for capacity checks, as the validator depends on it.
+        parameters.put("f", "10");
     }
 
     @Test
-    void testMissingUnitDistributionThrowsException() {
-        // It should throw an exception if the 'u' parameter is missing.
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(parameters);
-        });
-        assertEquals("Unit distribution parameter 'u' is required", exception.getMessage());
+    void testMissingUnitDistributionReturnsError() {
+        // It should return an error if the 'u' parameter is missing.
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Parameter 'u' (Unit Distribution) is mandatory and was not provided.", errors.get(0));
     }
 
     @Test
-    void testWrongNumberOfUnitTypesThrowsException() {
-        // It should throw an exception if the distribution does not have 5 values.
+    void testWrongNumberOfUnitTypesReturnsError() {
+        // It should return an error if the distribution does not have 5 values.
         parameters.put("u", "1,2,3,4");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(parameters);
-        });
-        assertEquals("Unit distribution must specify 5 unit types", exception.getMessage());
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Unit Distribution must contain 5 comma-separated values. You provided 4.", errors.get(0));
     }
 
     @Test
-    void testNegativeUnitCountThrowsException() {
-        // It should throw an exception if any unit count is negative.
+    void testNegativeUnitCountReturnsError() {
+        // It should return an error if any unit count is negative.
         parameters.put("u", "1,2,-3,4,5");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(parameters);
-        });
-        assertEquals("Unit counts cannot be negative", exception.getMessage());
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Unit counts cannot be negative. You entered: '-3'.", errors.get(0));
     }
 
     @Test
-    void testInvalidUnitCountFormatThrowsException() {
-        // It should throw an exception for a non-numeric unit count.
+    void testInvalidUnitCountFormatReturnsError() {
+        // It should return an error for a non-numeric unit count.
         parameters.put("u", "1,2,abc,4,5");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(parameters);
-        });
-        assertEquals("Invalid unit count format", exception.getMessage());
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Unit Distribution contains an invalid number. All values must be integers. You entered: '1,2,abc,4,5'.", errors.get(0));
     }
 
     @Test
-    void testTotalUnitsExceedingCapacityThrowsException() {
-        // It should throw an exception if the total units exceed the battlefield area.
+    void testTotalUnitsExceedingCapacityReturnsError() {
+        // It should return an error if the total units exceed the battlefield area.
         parameters.put("f", "5"); // 5x5 = 25
         parameters.put("u", "10,10,3,2,1"); // Total = 26
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(parameters);
-        });
-        assertEquals("Total units exceed battlefield capacity", exception.getMessage());
+        List<String> errors = validator.validate(parameters);
+        assertFalse(errors.isEmpty());
+        assertEquals("Total number of units (26) exceeds the battlefield capacity of 25 (5x5).", errors.get(0));
     }
 
     @Test
     void testValidUnitDistribution() {
-        // It should not throw an exception for a valid distribution.
+        // It should not return any errors for a valid distribution.
         parameters.put("u", "1,2,3,4,5");
-        assertDoesNotThrow(() -> validator.validate(parameters));
+        List<String> errors = validator.validate(parameters);
+        assertTrue(errors.isEmpty());
     }
 }

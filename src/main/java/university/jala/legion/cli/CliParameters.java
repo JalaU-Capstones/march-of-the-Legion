@@ -7,6 +7,13 @@ package university.jala.legion.cli;
  */
 public interface CliParameters {
     /**
+     * Gets the raw string value of a parameter by its key.
+     * @param key The parameter key (e.g., "a", "f").
+     * @return The raw value provided by the user, or a default placeholder.
+     */
+    String getRawValue(String key);
+
+    /**
      * Gets the selected sorting algorithm code.
      * @return A character representing the algorithm ('c', 'r', 'i', 'q').
      */

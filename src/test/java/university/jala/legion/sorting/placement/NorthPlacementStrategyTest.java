@@ -2,6 +2,7 @@ package university.jala.legion.sorting.placement;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import university.jala.legion.exception.SimulationException;
 import university.jala.legion.model.Position;
 import university.jala.legion.model.interfaces.ICharacter;
 import org.mockito.Mockito;
@@ -31,7 +32,7 @@ class NorthPlacementStrategyTest {
     }
 
     @Test
-    void testPlaceUnitsInNorthDirection() {
+    void testPlaceUnitsInNorthDirection() throws SimulationException {
         // It should place units from south to north, row by row for each rank.
         List<ICharacter> units = new ArrayList<>();
         ICharacter commander = createMockUnit(0);
@@ -51,36 +52,36 @@ class NorthPlacementStrategyTest {
 
     @Test
     void testNotEnoughRowsForUnitsThrowsException() {
-        // It should throw an exception if there are not enough rows for all ranks.
+        // It should throw a SimulationException if there are not enough rows for all ranks.
         List<ICharacter> units = new ArrayList<>();
         units.add(createMockUnit(0));
         units.add(createMockUnit(1));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        SimulationException exception = assertThrows(SimulationException.class, () -> {
             strategy.place(units, 1); // Only one row available
         });
 
-        assertEquals("Not enough space on the battlefield for all units.", exception.getMessage());
+        assertEquals("Not enough space on the battlefield to place all units.", exception.getMessage());
     }
 
     @Test
     void testNotEnoughSpaceWhenWrappingThrowsException() {
-        // It should throw an exception if a rank group wraps but still runs out of space.
+        // It should throw a SimulationException if a rank group wraps but still runs out of space.
         List<ICharacter> units = new ArrayList<>();
         units.add(createMockUnit(0));
         units.add(createMockUnit(0));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        SimulationException exception = assertThrows(SimulationException.class, () -> {
             strategy.place(units, 1); // Only one column available, forcing a wrap that fails
         });
 
-        assertEquals("Not enough space on the battlefield for all units.", exception.getMessage());
+        assertEquals("Not enough space on the battlefield to place all units.", exception.getMessage());
     }
 
     @Test
-    void testEmptyUnitList() {
+    void testEmptyUnitListDoesNotThrow() throws SimulationException {
         // It should not throw an exception when the unit list is empty.
         List<ICharacter> units = new ArrayList<>();
-        assertDoesNotThrow(() -> strategy.place(units, 10));
+        strategy.place(units, 10);
     }
 }

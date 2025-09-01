@@ -7,16 +7,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Represents the battlefield grid and manages the state of units upon it.
- * This class is responsible for maintaining the grid and the list of units,
- * but delegates rendering and placement logic to other components.
+ * This class is responsible for maintaining the grid, the list of units,
+ * and handling unit placements.
  */
 public class Battlefield implements IBattlefield {
     private final int size;
     private final ICharacter[][] grid;
     private final List<ICharacter> units;
+    private final Random random = new Random();
 
     /**
      * Constructs a new Battlefield with a specified size.
@@ -33,29 +36,59 @@ public class Battlefield implements IBattlefield {
     }
 
     /**
-     * Sets the troops on the battlefield, clearing any previous state.
-     * The positions of the units in the list are used to place them on the grid.
+     * Places a list of units at random, non-overlapping positions on the battlefield.
+     *
+     * @param unitsToPlace The list of units to be placed.
+     * @throws IllegalArgumentException if the number of units exceeds the battlefield capacity.
+     */
+    public void placeUnitsRandomly(List<ICharacter> unitsToPlace) {
+        if (unitsToPlace.size() > size * size) {
+            throw new IllegalArgumentException("Number of units exceeds battlefield capacity.");
+        }
+
+        clear();
+
+        List<Integer> availableSlots = IntStream.range(0, size * size).boxed().collect(Collectors.toList());
+        Collections.shuffle(availableSlots, random);
+
+        for (int i = 0; i < unitsToPlace.size(); i++) {
+            ICharacter unit = unitsToPlace.get(i);
+            int slot = availableSlots.get(i);
+            Position newPosition = new Position(slot / size, slot % size);
+            unit.setPosition(newPosition);
+            placeUnit(unit);
+        }
+    }
+
+    /**
+     * Sets the troops on the battlefield according to their predefined positions, clearing any previous state.
+     * This is typically used after sorting to place units in their final formation.
      *
      * @param troops The list of troops to place on the battlefield.
      */
     public void setUnits(List<ICharacter> troops) {
         clear();
-        this.units.addAll(troops);
-        for (ICharacter unit : this.units) {
+        for (ICharacter unit : troops) {
             if (unit.getPosition() != null) {
-                placeUnitOnGrid(unit);
+                placeUnit(unit);
             }
         }
     }
 
-    private void placeUnitOnGrid(ICharacter unit) {
+    /**
+     * Places a single unit on the grid and adds it to the internal list of units.
+     *
+     * @param unit The unit to place.
+     * @throws IllegalStateException if the target position is already occupied.
+     */
+    private void placeUnit(ICharacter unit) {
         Position position = unit.getPosition();
-        if (position.row() >= 0 && position.row() < size &&
-            position.column() >= 0 && position.column() < size) {
+        if (isWithinBounds(position)) {
             if (grid[position.row()][position.column()] == null) {
                 grid[position.row()][position.column()] = unit;
+                this.units.add(unit);
             } else {
-                // Handle position conflict if necessary, e.g., throw an exception
+                throw new IllegalStateException("Position " + position + " is already occupied.");
             }
         }
     }
@@ -92,5 +125,10 @@ public class Battlefield implements IBattlefield {
      */
     public List<ICharacter> getUnits() {
         return Collections.unmodifiableList(units);
+    }
+
+    private boolean isWithinBounds(Position position) {
+        return position.row() >= 0 && position.row() < size &&
+               position.column() >= 0 && position.column() < size;
     }
 }

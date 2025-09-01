@@ -1,5 +1,6 @@
 package university.jala.legion.sorting.placement;
 
+import university.jala.legion.exception.SimulationException;
 import university.jala.legion.model.Position;
 import university.jala.legion.model.interfaces.ICharacter;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class EastPlacementStrategy implements PlacementStrategy {
     @Override
-    public void place(List<ICharacter> units, int battlefieldSize) {
+    public void place(List<ICharacter> units, int battlefieldSize) throws SimulationException {
         if (units.isEmpty()) {
             return;
         }
@@ -37,7 +38,10 @@ public class EastPlacementStrategy implements PlacementStrategy {
 
             // Check if we've run out of battlefield space.
             if (currentCol >= battlefieldSize) {
-                throw new IllegalArgumentException("Not enough space on the battlefield for all units.");
+                throw new SimulationException(
+                    "Not enough space on the battlefield to place all units.",
+                    "Reduce the number of units (u parameter) or increase battlefield size (f parameter)."
+                );
             }
 
             unit.setPosition(new Position(currentRow, currentCol));

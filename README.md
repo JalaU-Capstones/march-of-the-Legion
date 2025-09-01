@@ -2,8 +2,8 @@
 
 > A tactical battlefield simulation showcasing sorting algorithms through military unit formations, built on SOLID design principles.
 
-[![Java](https://img.shields.io/badge/Java-24-orange.svg)](https://openjdk.java.net/)
-[![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg)](https://maven.apache.org/)
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/)
+[![Maven](https://img.shields.io/badge/Maven-3.6+-blue.svg)](https://maven.apache.org/)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](pom.xml)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -77,12 +77,12 @@ After packaging the application, you can run it directly from the command line.
 
 ### Command Line Parameters
 
-| Parameter | Description | Values | Required |
-|-----------|-------------|--------|----------|
-| `a` | Sorting Algorithm | `c` (Counting), `r` (Radix), `q` (Quick), `i` (Insertion) | ✅ |
-| `u` | Unit Distribution | `commander,medic,tank,sniper,infantry` (comma-separated) | ✅ |
-| `f` | Battlefield Size | `5-1000` (creates an NxN grid) | ❌ (default: 10) |
-| `o` | Formation Orientation | `n` (North), `s` (South), `e` (East), `w` (West) | ❌ (default: North) |
+| Parameter | Description | Values | Required               |
+|-----------|-------------|--------|------------------------|
+| `a` | Sorting Algorithm | `c` (Counting), `r` (Radix), `q` (Quick), `i` (Insertion) | ✅                      |
+| `u` | Unit Distribution | `commander,medic,tank,sniper,infantry` (comma-separated) | ✅                      |
+| `f` | Battlefield Size | `5-1000` (creates an NxN grid) | ❌ (default: 6)         |
+| `o` | Formation Orientation | `n` (North), `s` (South), `e` (East), `w` (West) | ❌ (default: North)     |
 | `t` | Display Type | `c` (Character), `n` (Numeric) | ❌ (default: Character) |
 
 ### Example Command
