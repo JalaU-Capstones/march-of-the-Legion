@@ -1,0 +1,54 @@
+@startuml
+' Sorting and Placement Architecture
+
+title Sorting and Placement Strategies
+
+skinparam classAttributeIconSize 0
+
+package "sorting" {
+    class TroopArranger {
+        - sortingStrategy: SortingStrategy
+        - placementStrategy: PlacementStrategy
+        + arrange(units: List<ICharacter>, size: int): void
+    }
+
+    interface SortingStrategy {
+        + sort(units: List<ICharacter>): void
+    }
+
+    class SortingStrategyFactory {
+        + {static} create(code: String): SortingStrategy
+    }
+
+    class CountingSort implements SortingStrategy
+    class RadixSort implements SortingStrategy
+    class QuickSort implements SortingStrategy
+    class InsertionSort implements SortingStrategy
+}
+
+package "sorting.placement" {
+    interface PlacementStrategy {
+        + place(units: List<ICharacter>, size: int): void
+    }
+
+    class PlacementStrategyFactory {
+        + {static} create(orientation: char): PlacementStrategy
+    }
+
+    class NorthPlacementStrategy implements PlacementStrategy
+    class SouthPlacementStrategy implements PlacementStrategy
+    class EastPlacementStrategy implements PlacementStrategy
+    class WestPlacementStrategy implements PlacementStrategy
+}
+
+' Relationships
+TroopArranger -> SortingStrategy : uses
+TroopArranger -> PlacementStrategy : uses
+
+TroopArranger ..> SortingStrategyFactory : uses >
+TroopArranger ..> PlacementStrategyFactory : uses >
+
+SortingStrategyFactory ..> SortingStrategy : creates >
+PlacementStrategyFactory ..> PlacementStrategy : creates >
+
+@enduml

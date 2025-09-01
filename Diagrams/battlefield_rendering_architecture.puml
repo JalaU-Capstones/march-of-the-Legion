@@ -1,0 +1,44 @@
+@startuml
+' Battlefield and Rendering Architecture
+
+title Battlefield and Rendering
+
+skinparam classAttributeIconSize 0
+
+package "model" {
+    class Battlefield implements IBattlefield {
+        - size: int
+        - grid: ICharacter[][]
+        - units: List<ICharacter>
+        + setUnits(troops: List<ICharacter>): void
+    }
+}
+
+package "model.interfaces" {
+    interface IBattlefield {
+        + getSize(): int
+        + getUnitAt(row: int, column: int): ICharacter
+    }
+}
+
+package "rendering" {
+    interface BattlefieldRenderer {
+        + render(battlefield: IBattlefield): String
+    }
+
+    class RendererFactory {
+        + {static} create(type: String): BattlefieldRenderer
+    }
+
+    class CharacterRenderer implements BattlefieldRenderer
+    class NumericRenderer implements BattlefieldRenderer
+}
+
+' Relationships
+BattlefieldRenderer ..> IBattlefield : uses >
+RendererFactory ..> BattlefieldRenderer : creates >
+
+CharacterRenderer ..|> BattlefieldRenderer
+NumericRenderer ..|> BattlefieldRenderer
+
+@enduml

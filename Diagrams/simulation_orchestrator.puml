@@ -1,0 +1,47 @@
+@startuml
+' Main Simulation Orchestrator
+
+title Simulation Orchestrator
+
+skinparam classAttributeIconSize 0
+
+package "simulation" {
+    class Simulation {
+        + Simulation(params: CliParameters)
+        + run(): void
+    }
+}
+
+package "cli" {
+    class Parameters
+}
+
+package "model" {
+    class Battlefield
+    class UnitFactory
+}
+
+package "sorting" {
+    class TroopArranger
+}
+
+package "rendering" {
+    class RendererFactory
+}
+
+' Entry Point
+class Main {
+    + {static} main(args: String[]): void
+}
+
+' Relationships
+Main --> Simulation : creates and runs >
+Main --> Parameters : creates >
+
+Simulation --> Parameters : uses >
+Simulation --> Battlefield : creates and uses >
+Simulation --> UnitFactory : uses >
+Simulation --> TroopArranger : creates and uses >
+Simulation --> RendererFactory : uses >
+
+@enduml

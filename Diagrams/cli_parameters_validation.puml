@@ -1,0 +1,43 @@
+@startuml
+' CLI and Validation Architecture
+
+title CLI Parameter Handling and Validation
+
+skinparam classAttributeIconSize 0
+
+package "cli" {
+    interface CliParameters {
+        + getAlgorithm(): String
+        + getOrientation(): String
+        + getType(): String
+        + getBattlefieldSize(): int
+        + getUnitDistribution(): int[]
+    }
+
+    class Parameters implements CliParameters {
+        - parameters: Map<String, String>
+        + Parameters(args: String[])
+    }
+}
+
+package "cli.validation" {
+    interface ParameterValidator {
+        + validate(parameters: Map<String, String>): void
+    }
+
+    class AlgorithmValidator implements ParameterValidator
+    class BattlefieldSizeValidator implements ParameterValidator
+    class OrientationValidator implements ParameterValidator
+    class TypeValidator implements ParameterValidator
+    class UnitDistributionValidator implements ParameterValidator
+
+    class ParameterValidatorFactory {
+        + {static} createValidators(): List<ParameterValidator>
+    }
+}
+
+Parameters ..> ParameterValidatorFactory : uses >
+ParameterValidatorFactory ..> ParameterValidator : creates >
+Parameters ..> ParameterValidator : uses >
+
+@enduml

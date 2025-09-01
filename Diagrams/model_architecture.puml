@@ -1,0 +1,63 @@
+@startuml
+' Core Domain Model Architecture
+
+title Core Domain Model
+
+skinparam classAttributeIconSize 0
+
+package "model" {
+    class UnitFactory {
+        + {static} createUnit(type: String): ICharacter
+    }
+
+    abstract class Character implements ICharacter {
+        # rank: int
+        # symbol: char
+        # numericRange: int
+        # position: Position
+    }
+
+    class Position <<record>> {
+        + row: int
+        + column: int
+    }
+}
+
+package "model.interfaces" {
+    interface ICharacter extends Positionable, Displayable {
+        + getRank(): int
+        + getType(): String
+    }
+
+    interface Positionable {
+        + getPosition(): Position
+        + setPosition(position: Position): void
+    }
+
+    interface Displayable {
+        + getSymbol(): char
+        + getNumericRange(): int
+    }
+}
+
+package "model.units" {
+    class Commander extends Character
+    class Medic extends Character
+    class Tank extends Character
+    class Sniper extends Character
+    class Infantry extends Character
+}
+
+' Relationships
+Character --> Position : has a
+ICharacter --> Positionable
+ICharacter --> Displayable
+
+UnitFactory ..> ICharacter : creates >
+UnitFactory .> Commander
+UnitFactory .> Medic
+UnitFactory .> Tank
+UnitFactory .> Sniper
+UnitFactory .> Infantry
+
+@enduml
