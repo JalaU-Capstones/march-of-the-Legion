@@ -16,12 +16,11 @@
 ### ✨ Key Features
 
 - **SOLID Architecture**: A clean, maintainable codebase built on industry-best practices.
+- **Immersive Startup**: Features an ASCII art banner and background sound for a better user experience.
 - **Descriptive Output**: Displays full algorithm names (e.g., "Quick Sort") for clarity.
 - **4 Sorting Algorithms**: Counting Sort, Radix Sort, Quick Sort, and Insertion Sort.
 - **5 Military Unit Types**: Commander, Medic, Tank, Sniper, and Infantry.
 - **Dynamic Battlefield**: Customizable grid sizes from 5x5 to 1000x1000.
-- **4 Formation Orientations**: North, South, East, and West deployment patterns.
-- **Dual Display Modes**: Render the battlefield with character symbols or numeric ranges.
 
 ---
 
@@ -29,15 +28,15 @@
 
 The project's architecture is strictly based on the five **SOLID principles** to ensure it is robust, maintainable, and easy to extend.
 
-- **Single Responsibility Principle (SRP)**: Each class has a single, well-defined purpose. For example, the `Battlefield` class manages state, while the `BattlefieldRenderer` handles display logic.
+- **Single Responsibility Principle (SRP)**: Each class has a single, well-defined purpose. For example, the `StartupPresenter` handles the banner, while the `BattlefieldRenderer` handles display logic.
 
-- **Open/Closed Principle (OCP)**: The system is open for extension but closed for modification. New sorting algorithms or display types can be added by creating new classes and updating a factory, without changing any existing code.
+- **Open/Closed Principle (OCP)**: The system is open for extension but closed for modification. New features like the startup banner are added in new classes without altering core logic.
 
-- **Liskov Substitution Principle (LSP)**: All concrete implementations are substitutable for their abstractions. For example, any `SortingStrategy` can be used by the `TroopArranger` without altering its correctness.
+- **Liskov Substitution Principle (LSP)**: All concrete implementations are substitutable for their abstractions. For example, any `SortingStrategy` can be used by the `TroopArranger`.
 
 - **Interface Segregation Principle (ISP)**: The design features lean, focused interfaces (e.g., `ICharacter`, `IBattlefield`). This ensures that classes do not depend on methods they don't use.
 
-- **Dependency Inversion Principle (DIP)**: High-level modules depend on abstractions, not on low-level implementations. The `Simulation` class depends on interfaces like `CliParameters` and `BattlefieldRenderer`, not on their concrete classes.
+- **Dependency Inversion Principle (DIP)**: High-level modules depend on abstractions, not on low-level implementations. The `Simulation` class depends on `CliParameters` and `BattlefieldRenderer`.
 
 ### 📊 Architectural Diagrams
 
@@ -71,46 +70,50 @@ This will produce an executable JAR file in the `target/` directory.
 
 ## 🎮 How to Run
 
-After packaging the application, you can run it directly from the command line.
+Run the application from the command line using the executable JAR.
 
 ### Command Line Parameters
 
 | Parameter | Description | Values | Required               |
 |-----------|-------------|--------|------------------------|
-| `a` | Sorting Algorithm | `c` (Counting), `r` (Radix), `q` (Quick), `i` (Insertion). The output will display the full name. | ✅                      |
+| `a` | Sorting Algorithm | `c`, `r`, `q`, `i`. The output will display the full name. | ✅                      |
 | `u` or `r` | Unit Distribution | `commander,medic,tank,sniper,infantry` (comma-separated) | ✅                      |
 | `f` | Battlefield Size | `5-1000` (creates an NxN grid) | ❌ (default: 6)         |
-| `o` | Formation Orientation | `n` (North), `s` (South), `e` (East), `w` (West) | ❌ (default: North)     |
+| `o` | Formation Orientation | `n`, `s`, `e`, `w` | ❌ (default: North)     |
 | `t` | Display Type | `c` (Character), `n` (Numeric) | ❌ (default: Character) |
 
 ### Example Command
 
-Use the following format to run the simulation. Note how the output displays the full algorithm name (`Quick Sort`) even though the input is `q`.
-
 ```bash
-# Command
 java -jar target/legion-1.0-SNAPSHOT.jar a=q u=1,2,5,4,10 f=10 o=s t=c
-
-# Output
-Algorithm: [Quick Sort]
-Type: [Character]
-Orientation: [South]
-Troops: [22]
-Battlefield: [10 x 10]
-
-Initial Position:
-# ... battlefield grid ...
-
-Final Position:
-# ... battlefield grid ...
 ```
 
 ---
 
-## ✨ Recent Improvements
+## ✨ Extra Features
+
+To enhance the user experience, the following features have been added:
+
+### Startup Banner and Sound
+- **ASCII Banner**: At startup, a large ASCII art banner is displayed for 7 seconds.
+- **Background Sound**: While the banner is visible, a background sound effect (`background.wav`) is played. If the file is missing, a warning is logged, but the application will not crash.
+
+To change the sound, replace the `background.wav` file in `src/main/resources` with your own `.wav` file.
+
+### State Transition Delay
+- **2-Second Pause**: There is a 2-second delay after the initial battlefield position is printed, allowing the user to observe the state before the final, sorted position is shown.
+
+---
+
+## 📜 Changelog
+
+### v1.3.0
+- **Added Startup Banner**: The application now starts with a 7-second ASCII art banner.
+- **Added Background Sound**: A background sound effect now plays during the startup banner.
+- **Added State Delay**: A 2-second delay was added between the initial and final battlefield displays.
 
 ### v1.2.0
-- **Descriptive Output**: The simulation now prints the full algorithm name (e.g., "Insertion Sort") instead of just the short code for improved clarity.
+- **Descriptive Output**: The simulation now prints the full algorithm name (e.g., "Insertion Sort").
 
 ### v1.1.0
 - **New Alias**: Added `r` as an alias for `u` for defining troop distribution.
@@ -126,18 +129,20 @@ The project follows a clean, modular structure based on its features:
 ```
 src
 ├── main
-│   └── java
-│       └── university/jala/legion
-│           ├── Main.java
-│           ├── cli/            # Parameter parsing and validation
-│           ├── model/          # Core domain objects and interfaces
-│           ├── rendering/      # Battlefield rendering strategies
-│           ├── simulation/     # Main simulation orchestrator
-│           ├── sorting/        # Sorting and placement strategies
-│           └── util/           # General-purpose utilities
+│   ├── java
+│   │   └── university/jala/legion
+│   │       ├── Main.java
+│   │       ├── cli/
+│   │       ├── model/
+│   │       ├── rendering/
+│   │       ├── simulation/
+│   │       ├── sorting/
+│   │       └── util/           # General-purpose utilities (AnsiColor, StartupPresenter)
+│   └── resources
+│       └── background.wav      # Background sound file
 └── test
     └── java
-        └── university/jala/legion # Unit and integration tests
+        └── university/jala/legion
 ```
 
 ---

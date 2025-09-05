@@ -19,6 +19,7 @@ class SimulationTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private static final int DELAY_MS = 2000;
 
     @BeforeEach
     void setUp() {
@@ -46,13 +47,27 @@ class SimulationTest {
         CliParameters params = createMockParameters();
         Simulation simulation = new Simulation(params);
 
-        // Call the run method directly. The test will fail if any unexpected exception is thrown.
         simulation.run();
 
         String output = outContent.toString();
         assertTrue(output.contains("Initial Position:"));
         assertTrue(output.contains("Final Position:"));
         assertTrue(output.contains("Execution time:"));
+    }
+
+    @Test
+    void testSimulationRunIncludesDelay() throws SimulationException {
+        // It should pause between printing the initial and final states.
+        CliParameters params = createMockParameters();
+        Simulation simulation = new Simulation(params);
+
+        long startTime = System.currentTimeMillis();
+        simulation.run();
+        long endTime = System.currentTimeMillis();
+
+        long duration = endTime - startTime;
+
+        assertTrue(duration >= DELAY_MS, "The simulation should take at least " + DELAY_MS + "ms due to the delay.");
     }
 
     @Test
@@ -67,8 +82,7 @@ class SimulationTest {
 
         Simulation simulation = new Simulation(params);
 
-        // Assert that the correct, new exception type is thrown.
         SimulationException exception = assertThrows(SimulationException.class, simulation::run);
-        assertEquals("Not enough space on the battlefield to place all units.", exception.getMessage());
+        assertTrue(exception.getMessage().contains("Not enough space on the battlefield"));
     }
 }

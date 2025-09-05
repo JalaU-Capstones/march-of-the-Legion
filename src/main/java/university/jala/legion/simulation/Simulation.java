@@ -26,6 +26,7 @@ public class Simulation {
     private final BattlefieldRenderer renderer;
     private final SimulationReporter reporter;
     private final TroopArranger arranger;
+    private static final int DELAY_BETWEEN_STATES_MS = 2000;
 
     /**
      * Constructs a new Simulation instance based on the provided command-line parameters.
@@ -51,6 +52,12 @@ public class Simulation {
         battlefield.placeUnitsRandomly(units);
         System.out.println("\nInitial Position:");
         System.out.println(renderer.render(battlefield));
+
+        try {
+            Thread.sleep(DELAY_BETWEEN_STATES_MS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
 
         long startTime = System.currentTimeMillis();
         arranger.arrange(units, battlefield.getSize());

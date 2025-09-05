@@ -5,6 +5,7 @@ import university.jala.legion.exception.SimulationException;
 import university.jala.legion.model.enums.AlgorithmType;
 import university.jala.legion.simulation.Simulation;
 import university.jala.legion.util.AnsiColor;
+import university.jala.legion.util.StartupPresenter;
 
 import java.util.Arrays;
 
@@ -20,6 +21,8 @@ public class Main {
      * @param args The command-line arguments that configure the simulation.
      */
     public static void main(String[] args) {
+        new StartupPresenter().showBannerAndPlaySound();
+
         Parameters params = new Parameters(args);
 
         if (!params.isValid()) {
