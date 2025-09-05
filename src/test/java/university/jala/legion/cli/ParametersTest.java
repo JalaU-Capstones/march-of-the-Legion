@@ -33,7 +33,7 @@ class ParametersTest {
 
     @Test
     void testMissingMandatoryParametersIsInvalid() {
-        // It should be invalid if mandatory parameters 't' or 'u' are missing.
+        // It should be invalid if mandatory parameters 't' or 'u'/'r' are missing.
         String[] argsWithoutT = {"a=c", "u=1,1,1,1,1"};
         Parameters paramsWithoutT = new Parameters(argsWithoutT);
         assertFalse(paramsWithoutT.isValid());
@@ -42,7 +42,7 @@ class ParametersTest {
         String[] argsWithoutU = {"a=c", "t=c"};
         Parameters paramsWithoutU = new Parameters(argsWithoutU);
         assertFalse(paramsWithoutU.isValid());
-        assertTrue(paramsWithoutU.getValidationErrors().stream().anyMatch(e -> e.contains("Parameter 'u' (Unit Distribution) is mandatory")));
+        assertTrue(paramsWithoutU.getValidationErrors().stream().anyMatch(e -> e.contains("Parameter 'u' or 'r' (Unit Distribution) is mandatory")));
     }
 
     @Test

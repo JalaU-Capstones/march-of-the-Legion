@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Validates the unit distribution parameter ('u').
+ * Validates the unit distribution parameter ('u' or 'r').
  */
 public class UnitDistributionValidator implements ParameterValidator {
     private static final int EXPECTED_UNIT_TYPES = 5;
@@ -14,7 +14,7 @@ public class UnitDistributionValidator implements ParameterValidator {
     @Override
     public List<String> validate(Map<String, String> parameters) {
         if (!parameters.containsKey("u")) {
-            return List.of("Parameter 'u' (Unit Distribution) is mandatory and was not provided.");
+            return List.of("Parameter 'u' or 'r' (Unit Distribution) is mandatory and was not provided.");
         }
 
         String distributionStr = parameters.get("u");
@@ -51,19 +51,35 @@ public class UnitDistributionValidator implements ParameterValidator {
 
         int battlefieldSize;
         try {
-            // Defensively parse the battlefield size. If it's invalid, we can't check capacity.
             battlefieldSize = Integer.parseInt(parameters.get("f"));
         } catch (NumberFormatException e) {
-            // The BattlefieldSizeValidator is responsible for reporting this error.
-            // We can safely return here as the capacity check cannot be performed.
-            return Collections.emptyList();
+            return Collections.emptyList(); // Handled by BattlefieldSizeValidator
         }
 
+        // Validate total unit count against the total area
         int totalUnits = unitCounts.stream().mapToInt(Integer::intValue).sum();
         if (totalUnits > battlefieldSize * battlefieldSize) {
             String errorMessage = String.format(
                 "Total number of units (%d) exceeds the battlefield capacity of %d (%dx%d).",
                 totalUnits, battlefieldSize * battlefieldSize, battlefieldSize, battlefieldSize
+            );
+            return List.of(errorMessage);
+        }
+
+        // Validate that the units can be placed according to the placement strategy.
+        // Each unit type requires its own set of rows/columns.
+        int requiredDimension = 0;
+        for (int count : unitCounts) {
+            if (count > 0) {
+                // Calculate rows/cols needed for this unit type using integer ceiling division
+                requiredDimension += (count + battlefieldSize - 1) / battlefieldSize;
+            }
+        }
+
+        if (requiredDimension > battlefieldSize) {
+            String errorMessage = String.format(
+                "Not enough space on the battlefield. The given units require %d rows/columns, but the battlefield size is only %d.",
+                requiredDimension, battlefieldSize
             );
             return List.of(errorMessage);
         }
