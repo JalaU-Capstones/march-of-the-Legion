@@ -16,12 +16,12 @@
 ### ✨ Key Features
 
 - **SOLID Architecture**: A clean, maintainable codebase built on industry-best practices.
+- **Descriptive Output**: Displays full algorithm names (e.g., "Quick Sort") for clarity.
 - **4 Sorting Algorithms**: Counting Sort, Radix Sort, Quick Sort, and Insertion Sort.
 - **5 Military Unit Types**: Commander, Medic, Tank, Sniper, and Infantry.
 - **Dynamic Battlefield**: Customizable grid sizes from 5x5 to 1000x1000.
 - **4 Formation Orientations**: North, South, East, and West deployment patterns.
 - **Dual Display Modes**: Render the battlefield with character symbols or numeric ranges.
-- **Comprehensive Test Suite**: High test coverage with JUnit 5 and Mockito.
 
 ---
 
@@ -29,13 +29,13 @@
 
 The project's architecture is strictly based on the five **SOLID principles** to ensure it is robust, maintainable, and easy to extend.
 
-- **Single Responsibility Principle (SRP)**: Each class has a single, well-defined purpose. For example, the `Battlefield` class manages state, while the `BattlefieldRenderer` handles display logic. Validators, sorters, and placement strategies all have their own distinct responsibilities.
+- **Single Responsibility Principle (SRP)**: Each class has a single, well-defined purpose. For example, the `Battlefield` class manages state, while the `BattlefieldRenderer` handles display logic.
 
-- **Open/Closed Principle (OCP)**: The system is open for extension but closed for modification. New sorting algorithms, placement strategies, or renderers can be added by creating new classes and updating a factory, without changing any existing code.
+- **Open/Closed Principle (OCP)**: The system is open for extension but closed for modification. New sorting algorithms or display types can be added by creating new classes and updating a factory, without changing any existing code.
 
 - **Liskov Substitution Principle (LSP)**: All concrete implementations are substitutable for their abstractions. For example, any `SortingStrategy` can be used by the `TroopArranger` without altering its correctness.
 
-- **Interface Segregation Principle (ISP)**: The design features lean, focused interfaces (e.g., `ICharacter`, `IBattlefield`, `Positionable`). This ensures that classes do not depend on methods they don't use.
+- **Interface Segregation Principle (ISP)**: The design features lean, focused interfaces (e.g., `ICharacter`, `IBattlefield`). This ensures that classes do not depend on methods they don't use.
 
 - **Dependency Inversion Principle (DIP)**: High-level modules depend on abstractions, not on low-level implementations. The `Simulation` class depends on interfaces like `CliParameters` and `BattlefieldRenderer`, not on their concrete classes.
 
@@ -55,8 +55,6 @@ For a detailed visual overview of the architecture, please see the class diagram
 - 🔧 **Maven 3.6+**
 
 ### Build and Test
-
-Follow these steps to build the project and run the full test suite from your terminal.
 
 ```bash
 # 1. Clone the repository
@@ -79,34 +77,45 @@ After packaging the application, you can run it directly from the command line.
 
 | Parameter | Description | Values | Required               |
 |-----------|-------------|--------|------------------------|
-| `a` | Sorting Algorithm | `c` (Counting), `r` (Radix), `q` (Quick), `i` (Insertion) | ✅                      |
+| `a` | Sorting Algorithm | `c` (Counting), `r` (Radix), `q` (Quick), `i` (Insertion). The output will display the full name. | ✅                      |
 | `u` or `r` | Unit Distribution | `commander,medic,tank,sniper,infantry` (comma-separated) | ✅                      |
 | `f` | Battlefield Size | `5-1000` (creates an NxN grid) | ❌ (default: 6)         |
 | `o` | Formation Orientation | `n` (North), `s` (South), `e` (East), `w` (West) | ❌ (default: North)     |
 | `t` | Display Type | `c` (Character), `n` (Numeric) | ❌ (default: Character) |
 
-### Example Commands
+### Example Command
 
-Use the following format to run the simulation from the executable JAR. You can use either `u` or `r` to define the troop distribution.
+Use the following format to run the simulation. Note how the output displays the full algorithm name (`Quick Sort`) even though the input is `q`.
 
 ```bash
-# Using 'u' for unit distribution
+# Command
 java -jar target/legion-1.0-SNAPSHOT.jar a=q u=1,2,5,4,10 f=10 o=s t=c
 
-# Using 'r' as an alias for unit distribution
-java -jar target/legion-1.0-SNAPSHOT.jar a=q r=1,2,5,4,10 f=10 o=s t=c
+# Output
+Algorithm: [Quick Sort]
+Type: [Character]
+Orientation: [South]
+Troops: [22]
+Battlefield: [10 x 10]
+
+Initial Position:
+# ... battlefield grid ...
+
+Final Position:
+# ... battlefield grid ...
 ```
 
 ---
 
 ## ✨ Recent Improvements
 
-### Robust Error Handling
-- **Immediate Halt**: The simulation now stops immediately if any command-line parameters are invalid. No battlefield will be shown, preventing confusing partial output.
-- **Colored Error Messages**: All validation errors are now printed in **red** text, making them highly visible and easy to diagnose.
+### v1.2.0
+- **Descriptive Output**: The simulation now prints the full algorithm name (e.g., "Insertion Sort") instead of just the short code for improved clarity.
 
-### Aligned Grid Printing
-- **Dynamic Cell Widths**: The battlefield grid is now printed with perfect alignment. All cells are automatically padded to match the width of the longest troop symbol (e.g., `50`), ensuring the grid remains readable regardless of the display type or unit count.
+### v1.1.0
+- **New Alias**: Added `r` as an alias for `u` for defining troop distribution.
+- **Robust Error Handling**: The simulation now stops immediately on invalid input, and error messages are colored red.
+- **Improved Grid Alignment**: The battlefield grid is now perfectly aligned with dynamic cell widths.
 
 ---
 
@@ -130,15 +139,6 @@ src
     └── java
         └── university/jala/legion # Unit and integration tests
 ```
-
----
-
-## 📜 Changelog
-
-### v1.1.0
-- **New Alias**: Added `r` as an alias for `u` for defining troop distribution.
-- **Robust Error Handling**: The simulation now stops immediately on invalid input, and error messages are colored red.
-- **Improved Grid Alignment**: The battlefield grid is now perfectly aligned with dynamic cell widths.
 
 ---
 

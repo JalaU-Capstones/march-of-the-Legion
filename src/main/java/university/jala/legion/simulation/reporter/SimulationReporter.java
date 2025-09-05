@@ -1,7 +1,7 @@
 package university.jala.legion.simulation.reporter;
 
 import university.jala.legion.cli.CliParameters;
-import university.jala.legion.model.interfaces.IBattlefield;
+import university.jala.legion.model.enums.AlgorithmType;
 
 import java.util.stream.IntStream;
 
@@ -26,8 +26,9 @@ public class SimulationReporter {
      * Displays the initial simulation configuration parameters.
      */
     public void displayParameters() {
-        System.out.println("Algorithm: [" + params.getAlgorithm() + "]");
-        System.out.println("Type: [" + (params.getType().equals("c") ? "Character" : "Numeric") + "]");
+        String algorithmName = AlgorithmType.getFullNameByCode(params.getAlgorithm());
+        System.out.println("Algorithm: [" + algorithmName + "]");
+        System.out.println("Type: [" + (params.getType().equalsIgnoreCase("c") ? "Character" : "Numeric") + "]");
         System.out.println("Orientation: [" + getOrientationName(params.getOrientation()) + "]");
         System.out.println("Troops: [" + IntStream.of(params.getUnitDistribution()).sum() + "]");
         System.out.println("Battlefield: [" + params.getBattlefieldSize() + " x " + params.getBattlefieldSize() + "]");

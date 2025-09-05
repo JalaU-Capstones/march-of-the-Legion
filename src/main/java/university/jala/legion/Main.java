@@ -2,6 +2,7 @@ package university.jala.legion;
 
 import university.jala.legion.cli.Parameters;
 import university.jala.legion.exception.SimulationException;
+import university.jala.legion.model.enums.AlgorithmType;
 import university.jala.legion.simulation.Simulation;
 import university.jala.legion.util.AnsiColor;
 
@@ -53,7 +54,8 @@ public class Main {
      * @param params The validated parameters object containing the raw inputs and errors.
      */
     private static void printErrorContext(Parameters params) {
-        System.out.println("Algorithm: [" + params.getRawValue("a") + "]");
+        String algorithmName = AlgorithmType.getFullNameByCode(params.getRawValue("a"));
+        System.out.println("Algorithm: [" + algorithmName + "]");
         System.out.println("Type: [" + params.getRawValue("t") + "]");
         System.out.println("Orientation: [" + params.getRawValue("o") + "]");
 
