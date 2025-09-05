@@ -3,6 +3,7 @@ package university.jala.legion;
 import university.jala.legion.cli.Parameters;
 import university.jala.legion.exception.SimulationException;
 import university.jala.legion.simulation.Simulation;
+import university.jala.legion.util.AnsiColor;
 
 import java.util.Arrays;
 
@@ -31,15 +32,14 @@ public class Main {
                 simulation.run();
             } catch (SimulationException e) {
                 // Catch known, user-facing simulation errors and display them gracefully.
-                // The simulation header is printed before the exception is thrown.
-                System.out.println("\nError: " + e.getMessage());
+                System.out.println(AnsiColor.red("\nError: " + e.getMessage()));
                 if (e.getHint() != null) {
-                    System.out.println("Hint: " + e.getHint());
+                    System.out.println(AnsiColor.red("Hint: " + e.getHint()));
                 }
                 System.exit(1);
             } catch (Exception e) {
                 // Catch any other unexpected errors and prevent stack traces from being shown.
-                System.err.println("\nAn unexpected system error occurred: " + e.getMessage());
+                System.err.println(AnsiColor.red("\nAn unexpected system error occurred: " + e.getMessage()));
                 System.exit(1);
             }
         }
@@ -70,9 +70,9 @@ public class Main {
 
         System.out.println("Battlefield: [" + params.getRawValue("f") + " x " + params.getRawValue("f") + "]");
 
-        System.out.println("\nErrors:");
+        System.out.println(AnsiColor.red("\nErrors:"));
         for (String error : params.getValidationErrors()) {
-            System.out.println("- " + error);
+            System.out.println(AnsiColor.red("- " + error));
         }
     }
 }

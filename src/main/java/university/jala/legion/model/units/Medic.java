@@ -9,14 +9,15 @@ import university.jala.legion.model.Character;
  */
 public class Medic extends Character {
     private static final int RANK = 1;
-    private static final char SYMBOL = 'M';
-    private static final int NUMERIC_RANGE = 2;
 
     /**
-     * Constructs a new Medic unit with predefined attributes.
+     * Constructs a new Medic unit with the given symbol and numeric value.
+     *
+     * @param symbol       The character symbol for display.
+     * @param numericValue The numeric identifier for the unit's type.
      */
-    public Medic() {
-        super(RANK, SYMBOL, NUMERIC_RANGE);
+    public Medic(char symbol, int numericValue) {
+        super(RANK, symbol, numericValue);
     }
 
     /**

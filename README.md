@@ -80,18 +80,33 @@ After packaging the application, you can run it directly from the command line.
 | Parameter | Description | Values | Required               |
 |-----------|-------------|--------|------------------------|
 | `a` | Sorting Algorithm | `c` (Counting), `r` (Radix), `q` (Quick), `i` (Insertion) | ✅                      |
-| `u` | Unit Distribution | `commander,medic,tank,sniper,infantry` (comma-separated) | ✅                      |
+| `u` or `r` | Unit Distribution | `commander,medic,tank,sniper,infantry` (comma-separated) | ✅                      |
 | `f` | Battlefield Size | `5-1000` (creates an NxN grid) | ❌ (default: 6)         |
 | `o` | Formation Orientation | `n` (North), `s` (South), `e` (East), `w` (West) | ❌ (default: North)     |
 | `t` | Display Type | `c` (Character), `n` (Numeric) | ❌ (default: Character) |
 
-### Example Command
+### Example Commands
 
-Use the following format to run the simulation from the executable JAR:
+Use the following format to run the simulation from the executable JAR. You can use either `u` or `r` to define the troop distribution.
 
 ```bash
+# Using 'u' for unit distribution
 java -jar target/legion-1.0-SNAPSHOT.jar a=q u=1,2,5,4,10 f=10 o=s t=c
+
+# Using 'r' as an alias for unit distribution
+java -jar target/legion-1.0-SNAPSHOT.jar a=q r=1,2,5,4,10 f=10 o=s t=c
 ```
+
+---
+
+## ✨ Recent Improvements
+
+### Robust Error Handling
+- **Immediate Halt**: The simulation now stops immediately if any command-line parameters are invalid. No battlefield will be shown, preventing confusing partial output.
+- **Colored Error Messages**: All validation errors are now printed in **red** text, making them highly visible and easy to diagnose.
+
+### Aligned Grid Printing
+- **Dynamic Cell Widths**: The battlefield grid is now printed with perfect alignment. All cells are automatically padded to match the width of the longest troop symbol (e.g., `50`), ensuring the grid remains readable regardless of the display type or unit count.
 
 ---
 
@@ -109,11 +124,21 @@ src
 │           ├── model/          # Core domain objects and interfaces
 │           ├── rendering/      # Battlefield rendering strategies
 │           ├── simulation/     # Main simulation orchestrator
-│           └── sorting/        # Sorting and placement strategies
+│           ├── sorting/        # Sorting and placement strategies
+│           └── util/           # General-purpose utilities
 └── test
     └── java
         └── university/jala/legion # Unit and integration tests
 ```
+
+---
+
+## 📜 Changelog
+
+### v1.1.0
+- **New Alias**: Added `r` as an alias for `u` for defining troop distribution.
+- **Robust Error Handling**: The simulation now stops immediately on invalid input, and error messages are colored red.
+- **Improved Grid Alignment**: The battlefield grid is now perfectly aligned with dynamic cell widths.
 
 ---
 

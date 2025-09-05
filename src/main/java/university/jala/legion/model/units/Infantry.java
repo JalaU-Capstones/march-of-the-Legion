@@ -9,14 +9,15 @@ import university.jala.legion.model.Character;
  */
 public class Infantry extends Character {
     private static final int RANK = 4;
-    private static final char SYMBOL = 'I';
-    private static final int NUMERIC_RANGE = 5;
 
     /**
-     * Constructs a new Infantry unit with predefined attributes.
+     * Constructs a new Infantry unit with the given symbol and numeric value.
+     *
+     * @param symbol       The character symbol for display.
+     * @param numericValue The numeric identifier for the unit's type.
      */
-    public Infantry() {
-        super(RANK, SYMBOL, NUMERIC_RANGE);
+    public Infantry(char symbol, int numericValue) {
+        super(RANK, symbol, numericValue);
     }
 
     /**

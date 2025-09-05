@@ -8,7 +8,7 @@ import java.util.Map;
  * Validates the orientation parameter ('o').
  */
 public class OrientationValidator implements ParameterValidator {
-    private static final List<String> VALID_ORIENTATIONS = List.of("n", "s", "e", "w");
+    private static final List<String> VALID_ORIENTATIONS = List.of("n", "s", "e", "w", "N", "S", "E", "W");
 
     @Override
     public List<String> validate(Map<String, String> parameters) {

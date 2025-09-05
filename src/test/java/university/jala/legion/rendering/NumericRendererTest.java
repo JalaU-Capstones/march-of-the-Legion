@@ -48,7 +48,7 @@ class NumericRendererTest {
         Mockito.when(mockBattlefield.getUnitAt(0, 0)).thenReturn(unit1);
         Mockito.when(mockBattlefield.getUnitAt(1, 1)).thenReturn(unit2);
 
-        String expected = "10 * \n* 20 \n";
+        String expected = "10 *  \n*  20 \n";
         String actual = renderer.render(mockBattlefield);
 
         assertEquals(expected, actual);

@@ -8,7 +8,7 @@ import java.util.Map;
  * Validates the list type parameter ('t').
  */
 public class TypeValidator implements ParameterValidator {
-    private static final List<String> VALID_TYPES = List.of("c", "n");
+    private static final List<String> VALID_TYPES = List.of("c", "n", "C", "N");
 
     @Override
     public List<String> validate(Map<String, String> parameters) {

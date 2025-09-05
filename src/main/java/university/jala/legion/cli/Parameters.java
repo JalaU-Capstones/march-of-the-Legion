@@ -38,11 +38,16 @@ public class Parameters implements CliParameters {
                     parameters.put(parts[0].toLowerCase(), parts[1].toLowerCase());
                 });
 
+        // Handle 'r' as an alias for 'u'
+        if (parameters.containsKey("r")) {
+            parameters.put("u", parameters.get("r"));
+        }
+
         // Apply default values if parameters are not provided
         parameters.putIfAbsent("f", DEFAULT_BATTLEFIELD_SIZE);
         parameters.putIfAbsent("o", DEFAULT_ORIENTATION);
         parameters.putIfAbsent("a", DEFAULT_ALGORITHM);
-        // 't' and 'u' are mandatory and do not have defaults
+        // 't' and 'u'/'r' are mandatory and do not have defaults
     }
 
     private void validateParameters() {
@@ -70,6 +75,9 @@ public class Parameters implements CliParameters {
 
     @Override
     public String getRawValue(String key) {
+        if (key.equalsIgnoreCase("r")) {
+            key = "u";
+        }
         return parameters.getOrDefault(key, "[not provided]");
     }
 

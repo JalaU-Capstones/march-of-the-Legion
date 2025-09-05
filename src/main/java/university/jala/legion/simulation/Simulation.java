@@ -69,7 +69,7 @@ public class Simulation {
         UnitType[] types = UnitType.values();
         for (int i = 0; i < distribution.length; i++) {
             for (int j = 0; j < distribution[i]; j++) {
-                createdUnits.add(UnitFactory.createUnit(types[i]));
+                createdUnits.add(UnitFactory.createUnit(types[i], j));
             }
         }
         return createdUnits;

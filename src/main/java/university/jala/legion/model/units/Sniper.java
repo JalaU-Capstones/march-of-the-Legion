@@ -9,14 +9,15 @@ import university.jala.legion.model.Character;
  */
 public class Sniper extends Character {
     private static final int RANK = 3;
-    private static final char SYMBOL = 'S';
-    private static final int NUMERIC_RANGE = 4;
 
     /**
-     * Constructs a new Sniper unit with predefined attributes.
+     * Constructs a new Sniper unit with the given symbol and numeric value.
+     *
+     * @param symbol       The character symbol for display.
+     * @param numericValue The numeric identifier for the unit's type.
      */
-    public Sniper() {
-        super(RANK, SYMBOL, NUMERIC_RANGE);
+    public Sniper(char symbol, int numericValue) {
+        super(RANK, symbol, numericValue);
     }
 
     /**

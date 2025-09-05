@@ -9,14 +9,15 @@ import university.jala.legion.model.Character;
  */
 public class Tank extends Character {
     private static final int RANK = 2;
-    private static final char SYMBOL = 'T';
-    private static final int NUMERIC_RANGE = 3;
 
     /**
-     * Constructs a new Tank unit with predefined attributes.
+     * Constructs a new Tank unit with the given symbol and numeric value.
+     *
+     * @param symbol       The character symbol for display.
+     * @param numericValue The numeric identifier for the unit's type.
      */
-    public Tank() {
-        super(RANK, SYMBOL, NUMERIC_RANGE);
+    public Tank(char symbol, int numericValue) {
+        super(RANK, symbol, numericValue);
     }
 
     /**
