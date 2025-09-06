@@ -99,10 +99,28 @@ Troops: [22]
 Battlefield: [10 x 10]
 
 Initial Position:
-# ... battlefield grid ...
+* * * * * R V l a * 
+w W O * * * y * * * 
+* * * * * Q * * * * 
+* * * * * * S * * * 
+K L * * x * * * * * 
+U * * * v * * * T * 
+N * * * X * * * * * 
+* * M * * * * * * u 
+* * * * * * * * k * 
+P * * * * * * * * * 
 
 Final Position:
-# ... battlefield grid ...
+a * * * * * * * * * 
+k l * * * * * * * * 
+u v w x y * * * * * 
+K L M N * * * * * * 
+O P Q R S T U V W X 
+* * * * * * * * * * 
+* * * * * * * * * * 
+* * * * * * * * * * 
+* * * * * * * * * * 
+* * * * * * * * * * 
 ```
 
 ---
